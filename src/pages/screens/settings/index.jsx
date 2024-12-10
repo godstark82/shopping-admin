@@ -1,6 +1,6 @@
 import Footer from "@/pages/components/footer";
 import Header from "@/pages/components/header";
-
+import Link from "next/link";
 export default function Settings() {
     return (
         <>
@@ -18,7 +18,7 @@ export default function Settings() {
                                     <h3 className="section-title">General</h3>
                                     <div className="section-intro">
                                         Settings section intro goes here. Lorem ipsum dolor sit amet,
-                                        consectetur adipiscing elit. <a href="help.html">Learn more</a>
+                                        consectetur adipiscing elit. <Link href="help.html">Learn more</Link>
                                     </div>
                                 </div>
                                 <div className="col-12 col-md-8">
@@ -101,7 +101,7 @@ export default function Settings() {
                                     <h3 className="section-title">Plan</h3>
                                     <div className="section-intro">
                                         Settings section intro goes here. Lorem ipsum dolor sit amet,
-                                        consectetur adipiscing elit. <a href="help.html">Learn more</a>
+                                        consectetur adipiscing elit. <Link href="help.html">Learn more</Link>
                                     </div>
                                 </div>
                                 <div className="col-12 col-md-8">
@@ -118,18 +118,18 @@ export default function Settings() {
                                                 <strong>Expires:</strong> 2030-09-24
                                             </div>
                                             <div className="mb-4">
-                                                <strong>Invoices:</strong> <a href="#">view</a>
+                                                <strong>Invoices:</strong> <Link href="#">view</Link>
                                             </div>
                                             <div className="justify-content-between row">
                                                 <div className="col-auto">
-                                                    <a className="app-btn-primary btn" href="#">
+                                                    <Link className="app-btn-primary btn" href="#">
                                                         Upgrade Plan
-                                                    </a>
+                                                    </Link>
                                                 </div>
                                                 <div className="col-auto">
-                                                    <a className="app-btn-secondary btn" href="#">
+                                                    <Link className="app-btn-secondary btn" href="#">
                                                         Cancel Plan
-                                                    </a>
+                                                    </Link>
                                                 </div>
                                             </div>
                                         </div>

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function MainBody() {
     return (
         <>
@@ -32,7 +34,7 @@ export default function MainBody() {
                                             </div>
                                         </div>
                                         {/*//app-card-body*/}
-                                        <a className="app-card-link-mask" href="#" />
+                                        <Link className="app-card-link-mask" href="#" />
                                     </div>
                                     {/*//app-card*/}
                                 </div>
@@ -60,7 +62,7 @@ export default function MainBody() {
                                             </div>
                                         </div>
                                         {/*//app-card-body*/}
-                                        <a className="app-card-link-mask" href="#" />
+                                        <Link className="app-card-link-mask" href="#" />
                                     </div>
                                     {/*//app-card*/}
                                 </div>
@@ -73,7 +75,7 @@ export default function MainBody() {
                                             <div className="stats-meta">Open</div>
                                         </div>
                                         {/*//app-card-body*/}
-                                        <a className="app-card-link-mask" href="#" />
+                                        <Link className="app-card-link-mask" href="#" />
                                     </div>
                                     {/*//app-card*/}
                                 </div>
@@ -86,7 +88,7 @@ export default function MainBody() {
                                             <div className="stats-meta">New</div>
                                         </div>
                                         {/*//app-card-body*/}
-                                        <a className="app-card-link-mask" href="#" />
+                                        <Link className="app-card-link-mask" href="#" />
                                     </div>
                                     {/*//app-card*/}
                                 </div>
@@ -104,7 +106,7 @@ export default function MainBody() {
                                                 {/*//col*/}
                                                 <div className="col-auto">
                                                     <div className="card-header-action">
-                                                        <a href="charts.html">More charts</a>
+                                                        <Link href="charts.html">More charts</Link>
                                                     </div>
                                                     {/*//card-header-actions*/}
                                                 </div>
@@ -143,7 +145,7 @@ export default function MainBody() {
                                                 {/*//col*/}
                                                 <div className="col-auto">
                                                     <div className="card-header-action">
-                                                        <a href="charts.html">More charts</a>
+                                                        <Link href="charts.html">More charts</Link>
                                                     </div>
                                                     {/*//card-header-actions*/}
                                                 </div>
@@ -185,7 +187,7 @@ export default function MainBody() {
                                                 {/*//col*/}
                                                 <div className="col-auto">
                                                     <div className="card-header-action">
-                                                        <a href="#">All projects</a>
+                                                        <Link href="#">All projects</Link>
                                                     </div>
                                                     {/*//card-header-actions*/}
                                                 </div>
@@ -231,7 +233,7 @@ export default function MainBody() {
                                                     {/*//col*/}
                                                 </div>
                                                 {/*//row*/}
-                                                <a className="item-link-mask" href="#" />
+                                                <Link className="item-link-mask" href="#" />
                                             </div>
                                             {/*//item*/}
                                             <div className="p-3 item">
@@ -270,7 +272,7 @@ export default function MainBody() {
                                                     {/*//col*/}
                                                 </div>
                                                 {/*//row*/}
-                                                <a className="item-link-mask" href="#" />
+                                                <Link className="item-link-mask" href="#" />
                                             </div>
                                             {/*//item*/}
                                             <div className="p-3 item">
@@ -309,7 +311,7 @@ export default function MainBody() {
                                                     {/*//col*/}
                                                 </div>
                                                 {/*//row*/}
-                                                <a className="item-link-mask" href="#" />
+                                                <Link className="item-link-mask" href="#" />
                                             </div>
                                             {/*//item*/}
                                             <div className="p-3 item">
@@ -348,7 +350,7 @@ export default function MainBody() {
                                                     {/*//col*/}
                                                 </div>
                                                 {/*//row*/}
-                                                <a className="item-link-mask" href="#" />
+                                                <Link className="item-link-mask" href="#" />
                                             </div>
                                             {/*//item*/}
                                         </div>
@@ -367,7 +369,7 @@ export default function MainBody() {
                                                 {/*//col*/}
                                                 <div className="col-auto">
                                                     <div className="card-header-action">
-                                                        <a href="#">View report</a>
+                                                        <Link href="#">View report</Link>
                                                     </div>
                                                     {/*//card-header-actions*/}
                                                 </div>
@@ -389,7 +391,7 @@ export default function MainBody() {
                                                     <tbody>
                                                         <tr>
                                                             <td>
-                                                                <a href="#">google.com</a>
+                                                                <Link href="#">google.com</Link>
                                                             </td>
                                                             <td className="stat-cell">110</td>
                                                             <td className="stat-cell">
@@ -411,14 +413,14 @@ export default function MainBody() {
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <a href="#">getbootstrap.com</a>
+                                                                <Link href="#">getbootstrap.com</Link>
                                                             </td>
                                                             <td className="stat-cell">67</td>
                                                             <td className="stat-cell">23%</td>
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <a href="#">w3schools.com</a>
+                                                                <Link href="#">w3schools.com</Link>
                                                             </td>
                                                             <td className="stat-cell">56</td>
                                                             <td className="stat-cell">
@@ -440,14 +442,14 @@ export default function MainBody() {
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <a href="#">javascript.com </a>
+                                                                <Link href="#">javascript.com </Link>
                                                             </td>
                                                             <td className="stat-cell">24</td>
                                                             <td className="stat-cell">-</td>
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <a href="#">github.com </a>
+                                                                <Link href="#">github.com </Link>
                                                             </td>
                                                             <td className="stat-cell">17</td>
                                                             <td className="stat-cell">15%</td>
@@ -508,9 +510,9 @@ export default function MainBody() {
                                         </div>
                                         {/*//app-card-body*/}
                                         <div className="mt-auto app-card-footer p-4">
-                                            <a className="app-btn-secondary btn" href="#">
+                                            <Link className="app-btn-secondary btn" href="#">
                                                 Create New
-                                            </a>
+                                            </Link>
                                         </div>
                                         {/*//app-card-footer*/}
                                     </div>
@@ -560,9 +562,9 @@ export default function MainBody() {
                                         </div>
                                         {/*//app-card-body*/}
                                         <div className="mt-auto app-card-footer p-4">
-                                            <a className="app-btn-secondary btn" href="#">
+                                            <Link className="app-btn-secondary btn" href="#">
                                                 Create New
-                                            </a>
+                                            </Link>
                                         </div>
                                         {/*//app-card-footer*/}
                                     </div>
@@ -612,9 +614,9 @@ export default function MainBody() {
                                         </div>
                                         {/*//app-card-body*/}
                                         <div className="mt-auto app-card-footer p-4">
-                                            <a className="app-btn-secondary btn" href="#">
+                                            <Link className="app-btn-secondary btn" href="#">
                                                 Create New
-                                            </a>
+                                            </Link>
                                         </div>
                                         {/*//app-card-footer*/}
                                     </div>

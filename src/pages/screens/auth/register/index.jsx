@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { register } from '@/services/login/login-service'
+import Link from 'next/link'
+import Image from 'next/image';
 
 export default function Register() {
     const [name, setName] = useState("");
@@ -19,13 +21,13 @@ export default function Register() {
                     <div className="d-flex flex-column align-content-end">
                         <div className="mx-auto app-auth-body">
                             <div className="mb-4 app-auth-branding">
-                                <a className="app-logo" href="index.html">
-                                    <img
+                                <Link className="app-logo" href="index.html">
+                                    <Image
                                         className="logo-icon me-2"
                                         src="assets/images/app-logo.svg"
                                         alt="logo"
                                     />
-                                </a>
+                                </Link>
                             </div>
                             <h2 className="mb-4 auth-heading text-center">Sign up to Portal</h2>
                             <div className="auth-form-container mx-auto text-start">
@@ -87,14 +89,14 @@ export default function Register() {
                                                 className="form-check-label"
                                                 htmlFor="RememberPassword"
                                             >
-                                                I agree to Portal's{" "}
-                                                <a href="#" className="app-link">
+                                                I agree to Portal&apos;s{" "}
+                                                <Link href="#" className="app-link">
                                                     Terms of Service
-                                                </a>{" "}
+                                                </Link>{" "}
                                                 and{" "}
-                                                <a href="#" className="app-link">
+                                                <Link href="#" className="app-link">
                                                     Privacy Policy
-                                                </a>
+                                                </Link>
                                                 .
                                             </label>
                                         </div>
@@ -112,9 +114,9 @@ export default function Register() {
                                 {/*//auth-form*/}
                                 <div className="pt-5 auth-option text-center">
                                     Already have an account?{" "}
-                                    <a className="text-link" href="/screens/auth/login">
+                                    <Link className="text-link" href="/screens/auth/login">
                                         Log in
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                             {/*//auth-form-container*/}

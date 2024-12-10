@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Header(props) {
   return (
     <>
@@ -8,7 +10,7 @@ export default function Header(props) {
               <div className="app-header-content">
                 <div className="justify-content-between align-items-center row">
                   <div className="col-auto">
-                    <a
+                    <Link
                       id="sidepanel-toggler"
                       className="d-inline-block d-xl-none sidepanel-toggler"
                       href="#"
@@ -29,7 +31,7 @@ export default function Header(props) {
                           d="M4 7h22M4 15h22M4 23h22"
                         />
                       </svg>
-                    </a>
+                    </Link>
                   </div>
                   {/*//col*/}
                   <div className="d-sm-none search-mobile-trigger col">
@@ -37,7 +39,7 @@ export default function Header(props) {
                   </div>
                   {/*//col*/}
                   <div className="col-auto">
-                    <a className="border rounded-circle nav-link" href="/screens/users/profile" title="Profile">
+                    <Link className="border rounded-circle nav-link" href="/screens/users/profile" title="Profile">
                       <span className="nav-icon">
 
                         <svg
@@ -51,7 +53,7 @@ export default function Header(props) {
                           <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
                         </svg>
                       </span>
-                    </a>
+                    </Link>
                   </div>
 
                   {/*//app-utilities*/}
@@ -66,18 +68,18 @@ export default function Header(props) {
           <div id="app-sidepanel" className="app-sidepanel">
             <div id="sidepanel-drop" className="sidepanel-drop" />
             <div className="d-flex flex-column sidepanel-inner">
-              <a href="#" id="sidepanel-close" className="d-xl-none sidepanel-close">
+              <Link href="#" id="sidepanel-close" className="d-xl-none sidepanel-close">
                 ×
-              </a>
+              </Link>
               <div className="app-branding">
-                <a className="app-logo" href="/">
+                <Link className="app-logo" href="/">
                   <span className="logo-text">ADMIN PANEL</span>
-                </a>
+                </Link>
               </div>
               <nav id="app-nav-main" className="flex-grow-1 app-nav app-nav-main">
                 <ul className="app-menu list-unstyled accordion" id="menu-accordion">
                   <li className="nav-item">
-                    <a className={props.activeItem === "overview" ? "active nav-link" : "nav-link"} href="/">
+                    <Link className={props.activeItem === "overview" ? "active nav-link" : "nav-link"} href="/">
                       <span className="nav-icon">
                         <svg
                           width="1em"
@@ -98,10 +100,10 @@ export default function Header(props) {
                         </svg>
                       </span>
                       <span className="nav-link-text">Overview</span>
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className={props.activeItem === "category" ? "active nav-link" : "nav-link"} href="/screens/category">
+                    <Link className={props.activeItem === "category" ? "active nav-link" : "nav-link"} href="/screens/category">
                       <span className="nav-icon">
                         <svg
                           width="1em"
@@ -119,13 +121,13 @@ export default function Header(props) {
                         </svg>
                       </span>
                       <span className="nav-link-text">Categories</span>
-                    </a>
+                    </Link>
 
                   </li>
 
                   <li className="nav-item">
 
-                    <a className={props.activeItem === "subcategory" ? "active nav-link" : "nav-link"} href="/screens/subcategory">
+                    <Link className={props.activeItem === "subcategory" ? "active nav-link" : "nav-link"} href="/screens/subcategory">
                       <span className="nav-icon">
                         <svg
                           width="1em"
@@ -149,11 +151,11 @@ export default function Header(props) {
                         </svg>
                       </span>
                       <span className="nav-link-text">SubCategories</span>
-                    </a>
+                    </Link>
                   </li>
 
                   <li className="nav-item">
-                    <a className={props.activeItem === "product" ? "active nav-link" : "nav-link"} href="/screens/product">
+                    <Link className={props.activeItem === "product" ? "active nav-link" : "nav-link"} href="/screens/product">
                       <span className="nav-icon">
                         <svg
                           width="1em"
@@ -170,10 +172,10 @@ export default function Header(props) {
                         </svg>
                       </span>
                       <span className="nav-link-text">Products</span>
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className={props.activeItem === "users" ? "active nav-link" : "nav-link"} href="/screens/users">
+                    <Link className={props.activeItem === "users" ? "active nav-link" : "nav-link"} href="/screens/users">
                       <span className="nav-icon">
                         <svg
                           width="1em"
@@ -191,7 +193,7 @@ export default function Header(props) {
                         </svg>
                       </span>
                       <span className="nav-link-text">Users</span>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </nav>
@@ -199,7 +201,7 @@ export default function Header(props) {
                 <nav className="app-nav app-nav-footer">
                   <ul className="app-menu list-unstyled footer-menu">
                     <li className="nav-item">
-                      <a className={props.activeItem === "settings" ? "active nav-link" : "nav-link"} href="/screens/settings">
+                      <Link className={props.activeItem === "settings" ? "active nav-link" : "nav-link"} href="/screens/settings">
                         <span className="nav-icon">
                           <svg
                             width="1em"
@@ -220,7 +222,7 @@ export default function Header(props) {
                           </svg>
                         </span>
                         <span className="nav-link-text">Settings</span>
-                      </a>
+                      </Link>
 
                     </li>
 

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer() {
     return <footer className="app-footer">
         <div className="py-3 text-center container">
@@ -5,13 +7,13 @@ export default function Footer() {
             <small className="copyright">
                 Designed with <span className="sr-only">love</span>
                 <i className="fa-heart fas" style={{ color: "#fb866a" }} /> by{" "}
-                <a
+                <Link
                     className="app-link"
                     href="#"
                     target="_blank"
                 >
                     ReDevs
-                </a>{" "}
+                </Link>{" "}
 
             </small>
         </div>

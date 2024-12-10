@@ -3,6 +3,7 @@ import MainBody from './components/app'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Footer from './components/footer'
+
 export default function Home () {
   const router = useRouter()
   useEffect(() => {
@@ -10,11 +11,11 @@ export default function Home () {
     if (isLoggedIn != 'true') {
       router.push('/screens/auth/login')
     }
-  }, [])
+  }, [router])
   return (
     <>
       <div className='app'>
-        <Header activeItem="overview" />
+        <Header activeItem='overview' />
         <MainBody />
         <Footer />
       </div>

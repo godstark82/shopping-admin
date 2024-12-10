@@ -1,565 +1,495 @@
-import Footer from "@/pages/components/footer";
+
 import Header from "@/pages/components/header";
+import { useState, useEffect } from "react";
+import { ProductModel } from "@/models/product-model";
+import { addProduct, getProducts, deleteProduct, updateProduct } from "@/services/product/product-service";
+import { getCategories } from "@/services/product/category-service";
+import { getSubCategories } from "@/services/product/subcategory-service";
+import Footer from "@/pages/components/footer";
+import Link from "next/link";
+import Image from "next/image";
+
 
 export default function Product() {
+  const [products, setProducts] = useState([])
+  const [categories, setCategories] = useState([])
+  const [subCategories, setSubCategories] = useState([])
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [sortBy, setSortBy] = useState('title')
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    price: 0,
+    discount: 0,
+    rating: 0,
+    inStock: true,
+    categoryId: [],
+    subCategoryId: [],
+    image: ''
+  })
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target
+    if (name === 'categoryId') {
+      const newCategories = checked
+        ? [...formData.categoryId, value]
+        : formData.categoryId.filter(id => id !== value)
+
+      // Remove subcategories that don't belong to selected categories
+      const validSubCategories = formData.subCategoryId.filter(subId => {
+        const subCategory = subCategories.find(sub => sub.id === subId)
+        return subCategory && newCategories.includes(subCategory.categoryId)
+      })
+
+      setFormData(prev => ({
+        ...prev,
+        categoryId: newCategories,
+        subCategoryId: validSubCategories
+      }))
+    } else if (name === 'subCategoryId') {
+      setFormData(prev => ({
+        ...prev,
+        subCategoryId: checked
+          ? [...prev.subCategoryId, value]
+          : prev.subCategoryId.filter(id => id !== value)
+      }))
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
+      }))
+    }
+  }
+
+  const fetchProducts = async () => {
+    setIsLoading(true)
+    try {
+      const products = await getProducts()
+      setProducts(products)
+    } catch (error) {
+      console.error('Error fetching products:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const fetchCategories = async () => {
+    try {
+      const categories = await getCategories()
+      setCategories(categories)
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+    }
+  }
+
+  const fetchSubCategories = async () => {
+    try {
+      const subCategories = await getSubCategories()
+      setSubCategories(subCategories)
+    } catch (error) {
+      console.error('Error fetching subcategories:', error)
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts()
+    fetchCategories()
+    fetchSubCategories()
+  }, [])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    try {
+      const product = new ProductModel(
+        selectedProduct?.id || '',
+        formData.title,
+        formData.description,
+        Number(formData.price),
+        Number(formData.discount),
+        Number(formData.rating),
+        Boolean(formData.inStock),
+        formData.categoryId,
+        formData.subCategoryId,
+        formData.image
+      )
+
+      if (selectedProduct) {
+        await updateProduct(product)
+      } else {
+        await addProduct(product)
+      }
+
+      setIsDialogOpen(false)
+      fetchProducts()
+      setFormData({
+        title: '',
+        description: '',
+        price: 0,
+        discount: 0,
+        rating: 0,
+        inStock: true,
+        categoryId: [],
+        subCategoryId: [],
+        image: ''
+      })
+      setSelectedProduct(null)
+    } catch (error) {
+      console.error('Error submitting product:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleEdit = (product) => {
+    setSelectedProduct(product)
+    setFormData({
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      discount: product.discount,
+      rating: product.rating,
+      inStock: product.inStock,
+      categoryId: Array.isArray(product.categoryId) ? product.categoryId : [product.categoryId],
+      subCategoryId: Array.isArray(product.subCategoryId) ? product.subCategoryId : [product.subCategoryId],
+      image: product.image || ''
+    })
+    setIsDialogOpen(true)
+  }
+
+  const handleDelete = async () => {
+    if (!selectedProduct) return
+
+    try {
+      await deleteProduct(selectedProduct.id)
+      setIsDeleteDialogOpen(false)
+      setSelectedProduct(null)
+      fetchProducts()
+    } catch (error) {
+      console.error('Error deleting product:', error)
+    }
+  }
+
+  // Get filtered subcategories based on selected categories
+  const getFilteredSubCategories = () => {
+    if (!formData.categoryId.length) return []
+    return subCategories.filter(sub => formData.categoryId.includes(sub.categoryId))
+  }
+
+  // Filter and sort products
+  const getFilteredAndSortedProducts = () => {
+    let filteredProducts = [...products]
+    
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      filteredProducts = filteredProducts.filter(product => 
+        product.categoryId.includes(selectedCategory)
+      )
+    }
+
+    // Sort products
+    return filteredProducts.sort((a, b) => {
+      switch(sortBy) {
+        case 'price':
+          return a.price - b.price
+        case 'rating':
+          return b.rating - a.rating
+        default:
+          return a.title.localeCompare(b.title)
+      }
+    })
+  }
+
   return (
     <>
-      <Header activeItem="product"/>
-      <>
-        <div className="app-wrapper">
-          <div className="app-content p-lg-4 p-md-3 pt-3">
-            <div className="container-xl">
-              <div className="justify-content-between align-items-center mb-4 g-3 row">
-                <div className="col-auto">
-                  <h1 className="mb-0 app-page-title">Orders</h1>
-                </div>
-                <div className="col-auto">
-                  <div className="page-utilities">
-                    <div className="justify-content-md-end justify-content-start align-items-center g-2 row">
-                      <div className="col-auto">
-                        <form className="align-items-center table-search-form gx-1 row">
-                          <div className="col-auto">
-                            <input
-                              type="text"
-                              id="search-orders"
-                              name="searchorders"
-                              className="form-control search-orders"
-                              placeholder="Search"
-                            />
-                          </div>
-                          <div className="col-auto">
-                            <button type="submit" className="app-btn-secondary btn">
-                              Search
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                      {/*//col*/}
-                      <div className="col-auto">
-                        <select className="form-select w-auto">
-                          <option selected="" value="option-1">
-                            All
-                          </option>
-                          <option value="option-2">This week</option>
-                          <option value="option-3">This month</option>
-                          <option value="option-4">Last 3 months</option>
-                        </select>
-                      </div>
-                      <div className="col-auto">
-                        <a className="app-btn-secondary btn" href="#">
-                          <svg
-                            width="1em"
-                            height="1em"
-                            viewBox="0 0 16 16"
-                            className="bi bi-download me-1"
-                            fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"
-                            />
-                            <path
-                              fillRule="evenodd"
-                              d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"
-                            />
-                          </svg>
-                          Download CSV
-                        </a>
-                      </div>
-                    </div>
-                    {/*//row*/}
-                  </div>
-                  {/*//table-utilities*/}
-                </div>
-                {/*//col-auto*/}
-              </div>
-              {/*//row*/}
-              <nav
-                id="orders-table-tab"
-                className="flex-column flex-sm-row shadow-sm mb-4 app-nav-tabs nav orders-table-tab"
+      <Header activeItem="product" />
+      <div className="app-wrapper">
+        <div className="mx-auto p-4 container">
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex gap-4">
+              <select 
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="border-gray-300 px-4 py-2 border rounded-lg"
               >
-                <a
-                  className="flex-sm-fill text-sm-center active nav-link"
-                  id="orders-all-tab"
-                  data-bs-toggle="tab"
-                  href="#orders-all"
-                  role="tab"
-                  aria-controls="orders-all"
-                  aria-selected="true"
-                >
-                  All
-                </a>
-                <a
-                  className="flex-sm-fill text-sm-center nav-link"
-                  id="orders-paid-tab"
-                  data-bs-toggle="tab"
-                  href="#orders-paid"
-                  role="tab"
-                  aria-controls="orders-paid"
-                  aria-selected="false"
-                >
-                  Paid
-                </a>
-                <a
-                  className="flex-sm-fill text-sm-center nav-link"
-                  id="orders-pending-tab"
-                  data-bs-toggle="tab"
-                  href="#orders-pending"
-                  role="tab"
-                  aria-controls="orders-pending"
-                  aria-selected="false"
-                >
-                  Pending
-                </a>
-                <a
-                  className="flex-sm-fill text-sm-center nav-link"
-                  id="orders-cancelled-tab"
-                  data-bs-toggle="tab"
-                  href="#orders-cancelled"
-                  role="tab"
-                  aria-controls="orders-cancelled"
-                  aria-selected="false"
-                >
-                  Cancelled
-                </a>
-              </nav>
-              <div className="tab-content" id="orders-table-tab-content">
-                <div
-                  className="active fade show tab-pane"
-                  id="orders-all"
-                  role="tabpanel"
-                  aria-labelledby="orders-all-tab"
-                >
-                  <div className="shadow-sm mb-5 app-card app-card-orders-table">
-                    <div className="app-card-body">
-                      <div className="table-responsive">
-                        <table className="mb-0 app-table-hover text-left table">
-                          <thead>
-                            <tr>
-                              <th className="cell">Order</th>
-                              <th className="cell">Product</th>
-                              <th className="cell">Customer</th>
-                              <th className="cell">Date</th>
-                              <th className="cell">Status</th>
-                              <th className="cell">Total</th>
-                              <th className="cell" />
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td className="cell">#15346</td>
-                              <td className="cell">
-                                <span className="truncate">
-                                  Lorem ipsum dolor sit amet eget volutpat erat
-                                </span>
-                              </td>
-                              <td className="cell">John Sanders</td>
-                              <td className="cell">
-                                <span>17 Oct</span>
-                                <span className="note">2:16 PM</span>
-                              </td>
-                              <td className="cell">
-                                <span className="bg-success badge">Paid</span>
-                              </td>
-                              <td className="cell">$259.35</td>
-                              <td className="cell">
-                                <a className="app-btn-secondary btn-sm" href="#">
-                                  View
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="cell">#15345</td>
-                              <td className="cell">
-                                <span className="truncate">
-                                  Consectetur adipiscing elit
-                                </span>
-                              </td>
-                              <td className="cell">Dylan Ambrose</td>
-                              <td className="cell">
-                                <span className="cell-data">16 Oct</span>
-                                <span className="note">03:16 AM</span>
-                              </td>
-                              <td className="cell">
-                                <span className="bg-warning badge">Pending</span>
-                              </td>
-                              <td className="cell">$96.20</td>
-                              <td className="cell">
-                                <a className="app-btn-secondary btn-sm" href="#">
-                                  View
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="cell">#15344</td>
-                              <td className="cell">
-                                <span className="truncate">
-                                  Pellentesque diam imperdiet
-                                </span>
-                              </td>
-                              <td className="cell">Teresa Holland</td>
-                              <td className="cell">
-                                <span className="cell-data">16 Oct</span>
-                                <span className="note">01:16 AM</span>
-                              </td>
-                              <td className="cell">
-                                <span className="bg-success badge">Paid</span>
-                              </td>
-                              <td className="cell">$123.00</td>
-                              <td className="cell">
-                                <a className="app-btn-secondary btn-sm" href="#">
-                                  View
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="cell">#15343</td>
-                              <td className="cell">
-                                <span className="truncate">
-                                  Vestibulum a accumsan lectus sed mollis ipsum
-                                </span>
-                              </td>
-                              <td className="cell">Jayden Massey</td>
-                              <td className="cell">
-                                <span className="cell-data">15 Oct</span>
-                                <span className="note">8:07 PM</span>
-                              </td>
-                              <td className="cell">
-                                <span className="bg-success badge">Paid</span>
-                              </td>
-                              <td className="cell">$199.00</td>
-                              <td className="cell">
-                                <a className="app-btn-secondary btn-sm" href="#">
-                                  View
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="cell">#15342</td>
-                              <td className="cell">
-                                <span className="truncate">Justo feugiat neque</span>
-                              </td>
-                              <td className="cell">Reina Brooks</td>
-                              <td className="cell">
-                                <span className="cell-data">12 Oct</span>
-                                <span className="note">04:23 PM</span>
-                              </td>
-                              <td className="cell">
-                                <span className="bg-danger badge">Cancelled</span>
-                              </td>
-                              <td className="cell">$59.00</td>
-                              <td className="cell">
-                                <a className="app-btn-secondary btn-sm" href="#">
-                                  View
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="cell">#15341</td>
-                              <td className="cell">
-                                <span className="truncate">
-                                  Morbi vulputate lacinia neque et sollicitudin
-                                </span>
-                              </td>
-                              <td className="cell">Raymond Atkins</td>
-                              <td className="cell">
-                                <span className="cell-data">11 Oct</span>
-                                <span className="note">11:18 AM</span>
-                              </td>
-                              <td className="cell">
-                                <span className="bg-success badge">Paid</span>
-                              </td>
-                              <td className="cell">$678.26</td>
-                              <td className="cell">
-                                <a className="app-btn-secondary btn-sm" href="#">
-                                  View
-                                </a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      {/*//table-responsive*/}
-                    </div>
-                    {/*//app-card-body*/}
-                  </div>
-                  {/*//app-card*/}
-                  <nav className="app-pagination">
-                    <ul className="justify-content-center pagination">
-                      <li className="disabled page-item">
-                        <a
-                          className="page-link"
-                          href="#"
-                          tabIndex={-1}
-                          aria-disabled="true"
-                        >
-                          Previous
-                        </a>
-                      </li>
-                      <li className="active page-item">
-                        <a className="page-link" href="#">
-                          1
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">
-                          2
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">
-                          3
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">
-                          Next
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
-                  {/*//app-pagination*/}
-                </div>
-                {/*//tab-pane*/}
-                <div
-                  className="fade tab-pane"
-                  id="orders-paid"
-                  role="tabpanel"
-                  aria-labelledby="orders-paid-tab"
-                >
-                  <div className="mb-5 app-card app-card-orders-table">
-                    <div className="app-card-body">
-                      <div className="table-responsive">
-                        <table className="mb-0 text-left table">
-                          <thead>
-                            <tr>
-                              <th className="cell">Order</th>
-                              <th className="cell">Product</th>
-                              <th className="cell">Customer</th>
-                              <th className="cell">Date</th>
-                              <th className="cell">Status</th>
-                              <th className="cell">Total</th>
-                              <th className="cell" />
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td className="cell">#15346</td>
-                              <td className="cell">
-                                <span className="truncate">
-                                  Lorem ipsum dolor sit amet eget volutpat erat
-                                </span>
-                              </td>
-                              <td className="cell">John Sanders</td>
-                              <td className="cell">
-                                <span>17 Oct</span>
-                                <span className="note">2:16 PM</span>
-                              </td>
-                              <td className="cell">
-                                <span className="bg-success badge">Paid</span>
-                              </td>
-                              <td className="cell">$259.35</td>
-                              <td className="cell">
-                                <a className="app-btn-secondary btn-sm" href="#">
-                                  View
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="cell">#15344</td>
-                              <td className="cell">
-                                <span className="truncate">
-                                  Pellentesque diam imperdiet
-                                </span>
-                              </td>
-                              <td className="cell">Teresa Holland</td>
-                              <td className="cell">
-                                <span className="cell-data">16 Oct</span>
-                                <span className="note">01:16 AM</span>
-                              </td>
-                              <td className="cell">
-                                <span className="bg-success badge">Paid</span>
-                              </td>
-                              <td className="cell">$123.00</td>
-                              <td className="cell">
-                                <a className="app-btn-secondary btn-sm" href="#">
-                                  View
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="cell">#15343</td>
-                              <td className="cell">
-                                <span className="truncate">
-                                  Vestibulum a accumsan lectus sed mollis ipsum
-                                </span>
-                              </td>
-                              <td className="cell">Jayden Massey</td>
-                              <td className="cell">
-                                <span className="cell-data">15 Oct</span>
-                                <span className="note">8:07 PM</span>
-                              </td>
-                              <td className="cell">
-                                <span className="bg-success badge">Paid</span>
-                              </td>
-                              <td className="cell">$199.00</td>
-                              <td className="cell">
-                                <a className="app-btn-secondary btn-sm" href="#">
-                                  View
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="cell">#15341</td>
-                              <td className="cell">
-                                <span className="truncate">
-                                  Morbi vulputate lacinia neque et sollicitudin
-                                </span>
-                              </td>
-                              <td className="cell">Raymond Atkins</td>
-                              <td className="cell">
-                                <span className="cell-data">11 Oct</span>
-                                <span className="note">11:18 AM</span>
-                              </td>
-                              <td className="cell">
-                                <span className="bg-success badge">Paid</span>
-                              </td>
-                              <td className="cell">$678.26</td>
-                              <td className="cell">
-                                <a className="app-btn-secondary btn-sm" href="#">
-                                  View
-                                </a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      {/*//table-responsive*/}
-                    </div>
-                    {/*//app-card-body*/}
-                  </div>
-                  {/*//app-card*/}
-                </div>
-                {/*//tab-pane*/}
-                <div
-                  className="fade tab-pane"
-                  id="orders-pending"
-                  role="tabpanel"
-                  aria-labelledby="orders-pending-tab"
-                >
-                  <div className="mb-5 app-card app-card-orders-table">
-                    <div className="app-card-body">
-                      <div className="table-responsive">
-                        <table className="mb-0 text-left table">
-                          <thead>
-                            <tr>
-                              <th className="cell">Order</th>
-                              <th className="cell">Product</th>
-                              <th className="cell">Customer</th>
-                              <th className="cell">Date</th>
-                              <th className="cell">Status</th>
-                              <th className="cell">Total</th>
-                              <th className="cell" />
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td className="cell">#15345</td>
-                              <td className="cell">
-                                <span className="truncate">
-                                  Consectetur adipiscing elit
-                                </span>
-                              </td>
-                              <td className="cell">Dylan Ambrose</td>
-                              <td className="cell">
-                                <span className="cell-data">16 Oct</span>
-                                <span className="note">03:16 AM</span>
-                              </td>
-                              <td className="cell">
-                                <span className="bg-warning badge">Pending</span>
-                              </td>
-                              <td className="cell">$96.20</td>
-                              <td className="cell">
-                                <a className="app-btn-secondary btn-sm" href="#">
-                                  View
-                                </a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      {/*//table-responsive*/}
-                    </div>
-                    {/*//app-card-body*/}
-                  </div>
-                  {/*//app-card*/}
-                </div>
-                {/*//tab-pane*/}
-                <div
-                  className="fade tab-pane"
-                  id="orders-cancelled"
-                  role="tabpanel"
-                  aria-labelledby="orders-cancelled-tab"
-                >
-                  <div className="mb-5 app-card app-card-orders-table">
-                    <div className="app-card-body">
-                      <div className="table-responsive">
-                        <table className="mb-0 text-left table">
-                          <thead>
-                            <tr>
-                              <th className="cell">Order</th>
-                              <th className="cell">Product</th>
-                              <th className="cell">Customer</th>
-                              <th className="cell">Date</th>
-                              <th className="cell">Status</th>
-                              <th className="cell">Total</th>
-                              <th className="cell" />
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td className="cell">#15342</td>
-                              <td className="cell">
-                                <span className="truncate">Justo feugiat neque</span>
-                              </td>
-                              <td className="cell">Reina Brooks</td>
-                              <td className="cell">
-                                <span className="cell-data">12 Oct</span>
-                                <span className="note">04:23 PM</span>
-                              </td>
-                              <td className="cell">
-                                <span className="bg-danger badge">Cancelled</span>
-                              </td>
-                              <td className="cell">$59.00</td>
-                              <td className="cell">
-                                <a className="app-btn-secondary btn-sm" href="#">
-                                  View
-                                </a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      {/*//table-responsive*/}
-                    </div>
-                    {/*//app-card-body*/}
-                  </div>
-                  {/*//app-card*/}
-                </div>
-                {/*//tab-pane*/}
-              </div>
-              {/*//tab-content*/}
+                <option value="all">All Categories</option>
+                {categories.map(category => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
+                ))}
+              </select>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="border-gray-300 px-4 py-2 border rounded-lg"
+              >
+                <option value="title">Sort by Name</option>
+                <option value="price">Sort by Price</option>
+                <option value="rating">Sort by Rating</option>
+              </select>
             </div>
-            {/*//container-fluid*/}
+            <button
+              onClick={() => setIsDialogOpen(true)}
+              className="bg-blue-500 hover:bg-blue-600 shadow-md px-6 py-2.5 rounded-lg font-medium text-white transform transition duration-200 ease-in-out hover:scale-105"
+            >
+              Add Product
+            </button>
           </div>
-          {/*//app-content*/}
-          <Footer />
-          {/*//app-footer*/}
-        </div>
-        {/*//app-wrapper*/}
-      </>
 
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="border-b-2 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+            </div>
+          ) : (
+            <div className="gap-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {getFilteredAndSortedProducts().map((product) => (
+                <div key={product.id} className="bg-white shadow-md hover:shadow-lg rounded-lg transition duration-300 overflow-hidden">
+                  {product.image && (
+                    <Image src={product.image} alt={product.title} className="w-full h-40 object-cover" />
+                  )}
+                  <div className="p-4">
+                    <h2 className="mb-2 line-clamp-1 font-bold text-gray-800 text-lg">{product.title}</h2>
+                    <p className="mb-3 line-clamp-2 text-gray-600 text-sm">{product.description}</p>
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="font-bold text-blue-600 text-lg">${product.price}</span>
+                      <div className="flex items-center">
+                        <span className="mr-1 text-yellow-500">★</span>
+                        <span className="text-gray-600 text-sm">{product.rating}</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <button
+                        onClick={() => handleEdit(product)}
+                        className="bg-amber-500 hover:bg-amber-600 px-3 py-1.5 rounded font-medium text-sm text-white transition duration-200"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedProduct(product)
+                          setIsDeleteDialogOpen(true)
+                        }}
+                        className="bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded font-medium text-sm text-white transition duration-200"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {isDialogOpen && (
+            <div className="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+              <div className="bg-white shadow-2xl rounded-2xl w-full max-w-xl max-h-[90vh] transform transition-all overflow-y-auto">
+                <div className="top-0 sticky bg-white px-6 py-4 border-b">
+                  <h2 className="font-bold text-2xl text-gray-800">
+                    {selectedProduct ? 'Edit Product' : 'Add Product'}
+                  </h2>
+                </div>
+                <form onSubmit={handleSubmit} className="p-6">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block mb-1 font-medium text-gray-700 text-sm">Title</label>
+                      <input
+                        type="text"
+                        name="title"
+                        value={formData.title}
+                        onChange={handleInputChange}
+                        className="border-gray-300 px-4 py-2 border focus:border-blue-500 rounded-lg focus:ring-2 focus:ring-blue-500 w-full transition duration-200"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block mb-1 font-medium text-gray-700 text-sm">Description</label>
+                      <textarea
+                        name="description"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        rows="4"
+                        className="border-gray-300 px-4 py-2 border focus:border-blue-500 rounded-lg focus:ring-2 focus:ring-blue-500 w-full transition duration-200"
+                        required
+                      />
+                    </div>
+                    <div className="gap-4 grid grid-cols-2">
+                      <div>
+                        <label className="block mb-1 font-medium text-gray-700 text-sm">Price</label>
+                        <input
+                          type="number"
+                          name="price"
+                          value={formData.price}
+                          onChange={handleInputChange}
+                          className="border-gray-300 px-4 py-2 border focus:border-blue-500 rounded-lg focus:ring-2 focus:ring-blue-500 w-full transition duration-200"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-1 font-medium text-gray-700 text-sm">Discount</label>
+                        <input
+                          type="number"
+                          name="discount"
+                          value={formData.discount}
+                          onChange={handleInputChange}
+                          className="border-gray-300 px-4 py-2 border focus:border-blue-500 rounded-lg focus:ring-2 focus:ring-blue-500 w-full transition duration-200"
+                        />
+                      </div>
+                    </div>
+                    <div className="gap-4 grid grid-cols-2">
+                      <div>
+                        <label className="block mb-1 font-medium text-gray-700 text-sm">Rating</label>
+                        <input
+                          type="number"
+                          name="rating"
+                          value={formData.rating}
+                          onChange={handleInputChange}
+                          min="0"
+                          max="5"
+                          step="0.1"
+                          className="border-gray-300 px-4 py-2 border focus:border-blue-500 rounded-lg focus:ring-2 focus:ring-blue-500 w-full transition duration-200"
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-1 font-medium text-gray-700 text-sm">Image URL</label>
+                        <input
+                          type="text"
+                          name="image"
+                          value={formData.image}
+                          onChange={handleInputChange}
+                          className="border-gray-300 px-4 py-2 border focus:border-blue-500 rounded-lg focus:ring-2 focus:ring-blue-500 w-full transition duration-200"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block mb-1 font-medium text-gray-700 text-sm">Categories</label>
+                      {categories.length > 0 ? (
+                        <div className="gap-2 border-gray-300 grid grid-cols-2 p-3 border rounded-lg">
+                          {categories.map(category => (
+                            <label key={category.id} className="flex items-center space-x-2 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                name="categoryId"
+                                value={category.id}
+                                checked={formData.categoryId.includes(category.id)}
+                                onChange={handleInputChange}
+                                className="border-gray-300 rounded focus:ring-blue-500 text-blue-600"
+                              />
+                              <span className="text-gray-700 text-sm">{category.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500 italic">No categories found</p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block mb-1 font-medium text-gray-700 text-sm">Subcategories</label>
+                      {formData.categoryId.length > 0 ? (
+                        getFilteredSubCategories().length > 0 ? (
+                          <div className="gap-2 border-gray-300 grid grid-cols-2 p-3 border rounded-lg">
+                            {getFilteredSubCategories().map(subCategory => (
+                              <label key={subCategory.id} className="flex items-center space-x-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  name="subCategoryId"
+                                  value={subCategory.id}
+                                  checked={formData.subCategoryId.includes(subCategory.id)}
+                                  onChange={handleInputChange}
+                                  className="border-gray-300 rounded focus:ring-blue-500 text-blue-600"
+                                />
+                                <span className="text-gray-700 text-sm">{subCategory.name}</span>
+                              </label>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-gray-500 italic">No subcategories found for selected categories</p>
+                        )
+                      ) : (
+                        <p className="text-gray-500 italic">Please select categories first</p>
+                      )}
+                    </div>
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="inStock"
+                        checked={formData.inStock}
+                        onChange={handleInputChange}
+                        className="border-gray-300 rounded focus:ring-blue-500 w-4 h-4 text-blue-600"
+                      />
+                      <label className="ml-2 text-gray-700">In Stock</label>
+                    </div>
+                  </div>
+                  <div className="flex justify-end space-x-3 mt-6">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsDialogOpen(false)
+                        setSelectedProduct(null)
+                        setFormData({
+                          title: '',
+                          description: '',
+                          price: 0,
+                          discount: 0,
+                          rating: 0,
+                          inStock: true,
+                          categoryId: [],
+                          subCategoryId: [],
+                          image: ''
+                        })
+                      }}
+                      className="hover:bg-gray-100 px-6 py-2.5 rounded-lg font-medium text-gray-700 transition duration-200"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 px-6 py-2.5 rounded-lg font-medium text-white transition duration-200"
+                    >
+                      {isSubmitting ? 'Saving...' : 'Save Product'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {isDeleteDialogOpen && (
+            <div className="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+              <div className="bg-white shadow-2xl rounded-2xl w-full max-w-md transform transition-all">
+                <div className="p-6">
+                  <div className="mb-4">
+                    <h2 className="mb-2 font-bold text-2xl text-gray-800">Confirm Delete</h2>
+                    <p className="text-gray-600">Are you sure you want to delete <span className="font-semibold">{selectedProduct?.title}</span>? This action cannot be undone.</p>
+                  </div>
+                  <div className="flex justify-end space-x-3">
+                    <button
+                      onClick={() => {
+                        setIsDeleteDialogOpen(false)
+                        setSelectedProduct(null)
+                      }}
+                      className="hover:bg-gray-100 px-6 py-2.5 rounded-lg font-medium text-gray-700 transition duration-200"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleDelete}
+                      className="bg-red-500 hover:bg-red-600 px-6 py-2.5 rounded-lg font-medium text-white transition duration-200"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        <Footer />
+      </div>
     </>
   );
 }

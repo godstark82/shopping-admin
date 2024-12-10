@@ -1,4 +1,6 @@
 import Footer from "@/pages/components/footer";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function Profile() {
     return <>
@@ -46,7 +48,7 @@ export default function Profile() {
                                                     <strong>Photo</strong>
                                                 </div>
                                                 <div className="item-data">
-                                                    <img
+                                                    <Image
                                                         className="profile-image"
                                                         src="assets/images/user.png"
                                                         alt=""
@@ -55,9 +57,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Change
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -74,9 +76,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Change
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -93,9 +95,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Change
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -112,9 +114,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Change
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -131,9 +133,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Change
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -143,9 +145,9 @@ export default function Profile() {
                                 </div>
                                 {/*//app-card-body*/}
                                 <div className="mt-auto app-card-footer p-4">
-                                    <a className="app-btn-secondary btn" href="#">
+                                    <Link className="app-btn-secondary btn" href="#">
                                         Manage Profile
-                                    </a>
+                                    </Link>
                                 </div>
                                 {/*//app-card-footer*/}
                             </div>
@@ -194,9 +196,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Change
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -215,9 +217,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Change
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -234,9 +236,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Change
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -253,9 +255,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Change
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -272,9 +274,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Change
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -284,9 +286,9 @@ export default function Profile() {
                                 </div>
                                 {/*//app-card-body*/}
                                 <div className="mt-auto app-card-footer p-4">
-                                    <a className="app-btn-secondary btn" href="#">
+                                    <Link className="app-btn-secondary btn" href="#">
                                         Manage Preferences
-                                    </a>
+                                    </Link>
                                 </div>
                                 {/*//app-card-footer*/}
                             </div>
@@ -339,9 +341,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Change
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -355,14 +357,14 @@ export default function Profile() {
                                                     <strong>Two-Factor Authentication</strong>
                                                 </div>
                                                 <div className="item-data">
-                                                    You haven't set up two-factor authentication.{" "}
+                                                    You haven&apos;t set up two-factor authentication.{" "}
                                                 </div>
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Set up
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -372,9 +374,9 @@ export default function Profile() {
                                 </div>
                                 {/*//app-card-body*/}
                                 <div className="mt-auto app-card-footer p-4">
-                                    <a className="app-btn-secondary btn" href="#">
+                                    <Link className="app-btn-secondary btn" href="#">
                                         Manage Security
-                                    </a>
+                                    </Link>
                                 </div>
                                 {/*//app-card-footer*/}
                             </div>
@@ -424,9 +426,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Edit
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -444,9 +446,9 @@ export default function Profile() {
                                             </div>
                                             {/*//col*/}
                                             <div className="text-end col">
-                                                <a className="app-btn-secondary btn-sm" href="#">
+                                                <Link className="app-btn-secondary btn-sm" href="#">
                                                     Connect
-                                                </a>
+                                                </Link>
                                             </div>
                                             {/*//col*/}
                                         </div>
@@ -456,9 +458,9 @@ export default function Profile() {
                                 </div>
                                 {/*//app-card-body*/}
                                 <div className="mt-auto app-card-footer p-4">
-                                    <a className="app-btn-secondary btn" href="#">
+                                    <Link className="app-btn-secondary btn" href="#">
                                         Manage Payment
-                                    </a>
+                                    </Link>
                                 </div>
                                 {/*//app-card-footer*/}
                             </div>

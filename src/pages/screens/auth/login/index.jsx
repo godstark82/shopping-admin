@@ -1,5 +1,6 @@
 import { login } from '@/services/login/login-service'
 import { useState } from 'react'
+import Link from 'next/link'
 
 export default function Login() {
     const [email, setEmail] = useState('')
@@ -80,7 +81,7 @@ export default function Login() {
                                         {/*//col-6*/}
                                         <div className="col-6">
                                             <div className="text-end forgot-password">
-                                                <a href="reset-password.html">Forgot password?</a>
+                                                <Link href="reset-password.html">Forgot password?</Link>
                                             </div>
                                         </div>
                                         {/*//col-6*/}
@@ -99,9 +100,9 @@ export default function Login() {
                             </form>
                             <div className="pt-5 auth-option text-center">
                                 No Account? Sign up{" "}
-                                <a className="text-link" href="/screens/auth/register">
+                                <Link className="text-link" href="/screens/auth/register">
                                     here
-                                </a>
+                                </Link>
                                 .
                             </div>
                         </div>
