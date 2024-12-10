@@ -1,16 +1,35 @@
-import {Image} from 'next/image'
+import { login } from '@/services/login/login-service'
+import { useState } from 'react'
 
 export default function Login() {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        try {
+            await login(email, password)
+        } catch (err) {
+            setError(err.message || 'An error occurred during login')
+        }
+    }
+
     return <>
         {/* <div className="flex justify-center app-auth-wrapper h-screen ali align-center g-0 row"> */}
         <div className="flex justify-center items-center m-0 app-auth-wrapper p-0 align-center">
             <div className="col-mdbg-white p-5 auth-main-col text-center bg col-12 col-lg-6">
                 <div className="d-flex flex-column align-content-end">
                     <div className="mx-auto app-auth-body">
-                      
+
                         <h2 className="mb-5 auth-heading text-center">Log in to Portal</h2>
+                        {error && (
+                            <div className="alert alert-danger" role="alert">
+                                {error}
+                            </div>
+                        )}
                         <div className="auth-form-container text-start">
-                            <form className="auth-form login-form">
+                            <form className="auth-form login-form" onSubmit={handleSubmit}>
                                 <div className="mb-3 email">
                                     <label className="sr-only" htmlFor="signin-email">
                                         Email
@@ -22,6 +41,8 @@ export default function Login() {
                                         className="form-control signin-email"
                                         placeholder="Email address"
                                         required="required"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </div>
                                 {/*//form-group*/}
@@ -36,6 +57,8 @@ export default function Login() {
                                         className="form-control signin-password"
                                         placeholder="Password"
                                         required="required"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                     />
                                     <div className="justify-content-between mt-3 extra row">
                                         <div className="col-6">

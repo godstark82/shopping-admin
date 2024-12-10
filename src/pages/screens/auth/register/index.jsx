@@ -1,9 +1,15 @@
-import {useState} from 'react'
+import { useState } from 'react'
+import { register } from '@/services/login/login-service'
 
 export default function Register() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        register(email, password, name)
+    }
 
 
     return <>
@@ -23,7 +29,10 @@ export default function Register() {
                             </div>
                             <h2 className="mb-4 auth-heading text-center">Sign up to Portal</h2>
                             <div className="auth-form-container mx-auto text-start">
-                                <form className="auth-signup-form auth-form">
+                                <form className="auth-signup-form auth-form" onSubmit={(e) => {
+                                    e.preventDefault()
+                                    handleSubmit(e)
+                                }}>
                                     <div className="mb-3 email">
                                         <label className="sr-only" htmlFor="signup-email">
                                             Your Name
@@ -33,6 +42,7 @@ export default function Register() {
                                             name="signup-name"
                                             type="text"
                                             className="form-control signup-name"
+                                            onChange={(e) => setName(e.target.value)}
                                             placeholder="Full name"
                                             required="required"
                                         />
@@ -133,7 +143,7 @@ export default function Register() {
 
                         </div>
                     </div>
-                 
+
                 </div>
                 {/*//auth-background-col*/}
             </div>
