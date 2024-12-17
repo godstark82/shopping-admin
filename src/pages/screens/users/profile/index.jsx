@@ -52,6 +52,8 @@ export default function Profile() {
                                                         className="profile-image"
                                                         src="assets/images/user.png"
                                                         alt=""
+                                                        width={100}
+                                                        height={100}
                                                     />
                                                 </div>
                                             </div>

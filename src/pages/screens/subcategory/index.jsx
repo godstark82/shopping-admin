@@ -124,7 +124,7 @@ export default function SubCategory() {
     }
 
     return <>
-        <Header activeItem="subcategory" />
+        <Header activeItem="subcategories" />
         <div className="app-wrapper">
             <div className="mx-auto p-4 container">
                 <div className="flex justify-end mb-6">
@@ -344,7 +344,7 @@ export default function SubCategory() {
                                         <tr key={subcategory.id}>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 {subcategory.image && (
-                                                    <Image src={subcategory.image} alt={subcategory.name} className="rounded-lg w-16 h-16 object-cover" />
+                                                    <Image src={subcategory.image} alt={subcategory.name} width={100} height={100} className="rounded-lg w-16 h-16 object-cover" />
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">

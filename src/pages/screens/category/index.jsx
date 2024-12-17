@@ -109,7 +109,7 @@ export default function Category() {
   }
 
   return <>
-    <Header activeItem="category" />
+    <Header activeItem="categories" />
     <div className="app-wrapper">
       <div className="mx-auto p-4 container">
         <div className="flex justify-end mb-6">
@@ -304,7 +304,7 @@ export default function Category() {
                 {categories.map((category) => (
                   <tr key={category.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <Image src={category.image} alt={category.name} className="rounded-lg w-16 h-16 object-cover" />
+                      <Image src={category.image} alt={category.name} width={100} height={100} className="rounded-lg w-16 h-16 object-cover" />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="font-medium text-gray-900 text-sm">{category.name}</div>

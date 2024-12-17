@@ -207,7 +207,7 @@ export default function Product() {
 
   return (
     <>
-      <Header activeItem="product" />
+      <Header activeItem="products" />
       <div className="app-wrapper">
         <div className="mx-auto p-4 container">
           <div className="flex justify-between items-center mb-6">
@@ -249,7 +249,7 @@ export default function Product() {
               {getFilteredAndSortedProducts().map((product) => (
                 <div key={product.id} className="bg-white shadow-md hover:shadow-lg rounded-lg transition duration-300 overflow-hidden">
                   {product.image && (
-                    <Image src={product.image} alt={product.title} className="w-full h-40 object-cover" />
+                    <Image src={product.image} alt={product.title} width={100} height={100} className="w-full h-40 object-cover" />
                   )}
                   <div className="p-4">
                     <h2 className="mb-2 line-clamp-1 font-bold text-gray-800 text-lg">{product.title}</h2>
